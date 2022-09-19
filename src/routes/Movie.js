@@ -1,3 +1,3 @@
 export default function Movie() {
-  return <div></div>;
+  return <div>this is a detail of movie</div>;
 }
