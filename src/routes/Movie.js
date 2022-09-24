@@ -51,19 +51,36 @@ const Image = styled.div`
 
 export default function Movie() {
   const { id } = useParams();
-  const { data, loading } = useQuery(GET_MOVIE, {
+  const {
+    data,
+    loading,
+    client: { cache },
+  } = useQuery(GET_MOVIE, {
     variables: {
       movieId: id,
     },
   });
-  console.log(data);
-
+  const onClick = () => {
+    cache.writeFragment({
+      id: `Movie:${id}`,
+      fragment: gql`
+        fragment MovieFragment on Movie {
+          isLiked
+        }
+      `,
+      data: {
+        isLiked: !data.movie.isLiked,
+      },
+    });
+  };
   return (
     <Container>
       <Column>
         <Title>{loading ? "Loading.." : `${data?.movie?.title}`}</Title>
         <Subtitle>⭐️ {data?.movie?.rating}</Subtitle>
-        <button>{data?.movie?.isLiked ? "Unlike" : "like"}</button>
+        <button onClick={onClick}>
+          {data?.movie?.isLiked ? "Unlike" : "like"}
+        </button>
       </Column>
       <Image bg={data?.movie?.medium_cover_image} />
     </Container>
