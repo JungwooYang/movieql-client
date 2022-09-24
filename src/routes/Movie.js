@@ -2,7 +2,7 @@ import { useQuery, gql } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
-const GET_MOVIES = gql`
+const GET_MOVIE = gql`
   query getMovie($movieId: ID!) {
     movie(id: $movieId) {
       id
@@ -54,16 +54,17 @@ const Image = styled.div`
 
 export default function Movie() {
   const { id } = useParams();
-  const { data, loading } = useQuery(GET_MOVIES, {
+  const { data, loading } = useQuery(GET_MOVIE, {
     variables: {
       movieId: id,
     },
   });
+  console.log(data);
 
   return (
     <Container>
       <Column>
-        <Title>{loading ? "loading.." : `${data?.movie?.title}`}</Title>
+        <Title>{loading ? "Loading.." : `${data?.movie?.title}`}</Title>
         <Subtitle>⭐️ {data?.movie?.rating}</Subtitle>
       </Column>
       <Image bg={data?.movie?.medium_cover_image} />
